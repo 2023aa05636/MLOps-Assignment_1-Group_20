@@ -3,3 +3,5 @@ pandas
 matplotlib
 flake8
 pytest
+optuna
+flask
