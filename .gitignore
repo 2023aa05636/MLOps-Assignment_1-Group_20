@@ -12,3 +12,5 @@ venv/
 
 # DVC artifacts
 .dvc/
+
+mlruns
