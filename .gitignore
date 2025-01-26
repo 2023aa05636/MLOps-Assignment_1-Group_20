@@ -5,6 +5,7 @@ __pycache__/
 # Environment files
 .env
 venv/
+mlops_env/
 .DS_Store
 
 # Logs
