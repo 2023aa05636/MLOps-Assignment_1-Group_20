@@ -1,7 +1,7 @@
 import mlflow
 import mlflow.sklearn
 from sklearn.datasets import load_iris
-#from sklearn.datasets import make_classification
+# from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
@@ -17,26 +17,26 @@ X_train, X_test, y_train, y_test = train_test_split(
     random_state=42
 )
 
-## Track Experiments
+# Track Experiments
 models = [
     (
-        "Logistic Regression", 
+        "Logistic Regression",
         {"C": 1, "solver": 'liblinear'},
-        LogisticRegression(), 
+        LogisticRegression(),
         (X_train, y_train),
         (X_test, y_test)
     ),
     (
-        "Random Forest", 
+        "Random Forest",
         {"n_estimators": 30, "max_depth": 3},
-        RandomForestClassifier(), 
+        RandomForestClassifier(),
         (X_train, y_train),
         (X_test, y_test)
     ),
     (
         "XGBClassifier",
         {"use_label_encoder": False, "eval_metric": 'logloss'},
-        XGBClassifier(), 
+        XGBClassifier(),
         (X_train, y_train),
         (X_test, y_test)
     )
@@ -49,10 +49,10 @@ for model_name, params, model, train_set, test_set in models:
     y_train = train_set[1]
     X_test = test_set[0]
     y_test = test_set[1]
-    
+
     model.set_params(**params)
     model.fit(X_train, y_train)
-    
+
     y_pred = model.predict(X_test)
     report = classification_report(y_test, y_pred, output_dict=True)
     reports.append(report)
@@ -64,16 +64,16 @@ for i, element in enumerate(models):
     params = element[1]
     model = element[2]
     report = reports[i]
-    
-    with mlflow.start_run(run_name=model_name):        
+
+    with mlflow.start_run(run_name=model_name):    
         mlflow.log_params(params)
         mlflow.log_metrics({
             'accuracy': report['accuracy'],
             'recall_class_1': report['1']['recall'],
             'recall_class_0': report['0']['recall'],
             'f1_score_macro': report['macro avg']['f1-score']
-        })  
-        
+        })
+
         if "XGB" in model_name:
             mlflow.xgboost.log_model(model, "model")
         else:
