@@ -65,7 +65,7 @@ for i, element in enumerate(models):
     model = element[2]
     report = reports[i]
 
-    with mlflow.start_run(run_name=model_name):    
+    with mlflow.start_run(run_name=model_name):
         mlflow.log_params(params)
         mlflow.log_metrics({
             'accuracy': report['accuracy'],
